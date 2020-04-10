@@ -1,0 +1,27 @@
+1:书本特征描述结构发生变化如下
+typedef struct _BOOKDESCRIP 
+{
+	 _BOOKDESCRIP()
+	 {
+		memset(versionType,0,8);
+		strcpy(versionType,VERSION_TYPE);
+	 }
+	 char versionType[8];//添加版本类型号
+	 
+	 unsigned int filesize;
+	 int nums_desc;//书本的页数
+	 char srial_number[32];//书本的序列号
+	 void *pDescrip;//指向书本模板描述指针
+}BOOKDESCRIP;
+typedef struct _BOOKDESCRIP *pBOOKDESCRIP;
+2:GK库和君正库合并成一个工程文件，编译工程时请修改tw_tpyedef.h文件 USING_MODES 宏定义
+
+#define T2X_SYSTEM   'T'
+#define GK_SYSTEM	 'G'
+
+#ifndef USING_MODES
+#define USING_MODES T2X_SYSTEM
+#endif
+
+
+3:1.0版本库和2.0版本不兼容，服务器和设备端库和数据库都要保持版本匹配
