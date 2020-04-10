@@ -1,0 +1,42 @@
+#CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
+#project(dsp)
+
+#SET(CMAKE_BUILD_TYPE "Release")
+#SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wstrict-prototypes -fwrapv -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -DNDEBUG -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lm")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lrt")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ldl")
+
+#set(CMAKE_C_FLAGS "-O2 -DNDEBUG -Wall -pipe -fmessage-length=0 -ffunction-sections -fdata-sections")
+#message(“message(${PROJECT_SOURCE_DIR})”)
+#message(${PROJECT_SOURCE_DIR})
+INCLUDE_DIRECTORIES(.)
+AUX_SOURCE_DIRECTORY(. DIR_SRCS)
+#Akaze
+AUX_SOURCE_DIRECTORY(./dsplib DIR_SRCS)
+#core
+#INCLUDE_DIRECTORIES(.)
+AUX_SOURCE_DIRECTORY(./dsplib/core DIR_SRCS)
+#img
+#INCLUDE_DIRECTORIES(.)
+AUX_SOURCE_DIRECTORY(./dsplib/img DIR_SRCS)
+#fast_orb
+AUX_SOURCE_DIRECTORY(./fast_orb DIR_SRCS)
+
+
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
+ADD_LIBRARY(dsp SHARED ${DIR_SRCS})
+ADD_LIBRARY(dsp_static STATIC ${DIR_SRCS})
+SET_TARGET_PROPERTIES (dsp_static PROPERTIES OUTPUT_NAME "dsp")
+
+# cmake在构建一个新的target时，会尝试清理掉其他使用这个名字的库，
+# 因此，在构建libhello.a时，就会清理掉libhello.so.
+# 为了回避这个问题，比如再次使用SET_TARGET_PROPERTIES定义 CLEAN_DIRECT_OUTPUT属性。
+
+SET_TARGET_PROPERTIES (dsp_static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+SET_TARGET_PROPERTIES (dsp PROPERTIES CLEAN_DIRECT_OUTPUT 1)
